@@ -1,4 +1,4 @@
-FROM fedora:39
+FROM fedora:41
 
 ARG USERNAME=avojak
 ARG USER_UID=1000
@@ -11,6 +11,7 @@ RUN dnf install -y git wget xz
 
 # Install base development libraries
 RUN dnf install -y \
+        blueprint-compiler \
         gtk4-devel \
         libvala-devel \
         libadwaita-devel \
@@ -30,6 +31,9 @@ RUN dnf install -y json-glib-devel && \
     ninja -C build install && \
     popd && \
     rm -rf vala-language-server-$VLS_VERSION.tar.xz vala-language-server-$VLS_VERSION
+
+RUN dnf clean all && \
+    rm -rf /var/cache/dnf
 
 # Setup non-root user
 RUN groupadd -g $USER_GID $USERNAME && \
